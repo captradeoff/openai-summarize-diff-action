@@ -9,8 +9,8 @@ async function run() {
     const diff = core.getInput('diff', { required: true });
     const apiKey = core.getInput('apikey', { required: true });
     const examplePostSummary = core.getInput('examplePostSummary', { required: false }) || defaultExamplePostSummary;
-    const maxTokens = core.getInput('maxTokens', { required: false }) || 30;
-    const maxCharacters = core.getInput('maxCharacters', { required: false }) || 140;
+    const maxTokens = parseInt(core.getInput('maxTokens', { required: false })) || 30;
+    const maxCharacters = parseInt(core.getInput('maxCharacters', { required: false })) || 140;
     
     // Initialize OpenAI client
     const openai = new OpenAI({
