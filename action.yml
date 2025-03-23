@@ -1,5 +1,5 @@
 name: 'OpenAI Summarize Diff'
-description: 'Uses OpenAI to explain and summarize git diffs in a clear, concise way'
+description: 'Uses OpenAI to explain the changes in the last git diff in a concise manner'
 inputs:
   diff:
     description: 'The Git diff to be explained'
@@ -23,6 +23,6 @@ runs:
   using: 'node20'
   main: 'dist/index.js'
 branding:
-  icon: 'message-square'
-  color: 'green'
+  icon: 'code'
+  color: 'white'
 
