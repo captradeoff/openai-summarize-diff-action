@@ -42269,11 +42269,16 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(7484);
 const { OpenAI } = __nccwpck_require__(2583);
 
+const defaultExamplePostSummary = "update the code with new features: parallelisation, caching, and better error handling"
+
 async function run() {
   try {
     // Get inputs
     const diff = core.getInput('diff', { required: true });
     const apiKey = core.getInput('apikey', { required: true });
+    const examplePostSummary = core.getInput('examplePostSummary', { required: false }) || defaultExamplePostSummary;
+    const maxTokens = core.getInput('maxTokens', { required: false }) || 30;
+    const maxCharacters = core.getInput('maxCharacters', { required: false }) || 140;
     
     // Initialize OpenAI client
     const openai = new OpenAI({
@@ -42286,14 +42291,15 @@ async function run() {
       messages: [
         {
           role: "system",
-          content: "you are an x.com poster that explains git diffs in a clear and concise way in all lowercase under 250 characters."
+          content: "you are an x.com tpot poster that explains git diffs in a clear and concise way\
+           in all lowercase under " + maxCharacters + " characters. here's an example post summary:\n\n" + examplePostSummary
         },
         {
           role: "user",
           content: `please explain the changes in the following diff, while ignoring any libraries folders that were added:\n\n${diff}`
         }
       ],
-      max_tokens: 250,
+      max_tokens: maxTokens,
       temperature: 0.5,
     });
 
