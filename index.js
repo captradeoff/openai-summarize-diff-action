@@ -9,8 +9,8 @@ async function run() {
     const diff = core.getInput('diff', { required: true });
     const apiKey = core.getInput('apikey', { required: true });
     const examplePostSummary = core.getInput('examplePostSummary', { required: false }) || defaultExamplePostSummary;
-    const maxTokens = parseInt(core.getInput('maxTokens', { required: false })) || 30;
-    const maxCharacters = parseInt(core.getInput('maxCharacters', { required: false })) || 140;
+    const maxTokens = core.getInput('maxTokens', { required: false }) || 30;
+    const maxCharacters = core.getInput('maxCharacters', { required: false }) || 140;
     
     // Initialize OpenAI client
     const openai = new OpenAI({
@@ -31,7 +31,7 @@ async function run() {
           content: `please explain the changes in the following diff, while ignoring any libraries folders that were added:\n\n${diff}`
         }
       ],
-      max_tokens: maxTokens,
+      max_tokens: parseInt(maxTokens),
       temperature: 0.5,
     });
 
