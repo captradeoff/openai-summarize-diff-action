@@ -31269,6 +31269,149 @@ module.exports.implForWrapper = function (wrapper) {
 
 /***/ }),
 
+/***/ 5783:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(7484);
+const { generateDiffExplanation } = __nccwpck_require__(399);
+
+/**
+ * Main function to run the GitHub Action
+ */
+async function run() {
+  try {
+    // Get inputs from GitHub Action
+    const diff = core.getInput('diff', { required: true });
+    const apiKey = core.getInput('apikey', { required: true });
+    const examplePostSummary = core.getInput('examplePostSummary', { required: false });
+    const maxTokensInput = core.getInput('maxTokens', { required: false });
+    const maxCharactersInput = core.getInput('maxCharacters', { required: false });
+    
+    // Parse numeric inputs with better validation
+    let maxTokens = 30; // Default value
+    if (maxTokensInput) {
+      const parsedTokens = parseInt(maxTokensInput);
+      if (isNaN(parsedTokens)) {
+        throw new Error('maxTokens must be a valid number');
+      }
+      maxTokens = parsedTokens;
+    }
+    
+    let maxCharacters = 140; // Default value
+    if (maxCharactersInput) {
+      const parsedChars = parseInt(maxCharactersInput);
+      if (isNaN(parsedChars)) {
+        throw new Error('maxCharacters must be a valid number');
+      }
+      maxCharacters = parsedChars;
+    }
+    
+    // Generate explanation
+    const explanation = await generateDiffExplanation({
+      diff,
+      apiKey,
+      examplePostSummary,
+      maxTokens,
+      maxCharacters
+    });
+    
+    // Set output
+    core.setOutput('explanation', explanation);
+    console.log('Explanation generated successfully');
+    
+  } catch (error) {
+    core.setFailed(`Action failed with error: ${error.message}`);
+  }
+}
+
+module.exports = { run }; 
+
+/***/ }),
+
+/***/ 399:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { OpenAI } = __nccwpck_require__(2583);
+
+/**
+ * Creates an OpenAI client
+ * @param {string} apiKey - The OpenAI API key
+ * @returns {OpenAI} - The OpenAI client
+ */
+function createOpenAIClient(apiKey) {
+  if (!apiKey) {
+    throw new Error('OpenAI API key is required');
+  }
+  
+  return new OpenAI({
+    apiKey: apiKey
+  });
+}
+
+/**
+ * Generates an explanation of a Git diff using OpenAI
+ * @param {Object} params - Parameters for the explanation
+ * @param {string} params.diff - The Git diff to explain
+ * @param {string} params.apiKey - The OpenAI API key
+ * @param {string} params.examplePostSummary - Example summary to guide the model
+ * @param {number} params.maxTokens - Maximum tokens to generate
+ * @param {number} params.maxCharacters - Maximum characters in the explanation
+ * @returns {Promise<string>} - The generated explanation
+ */
+async function generateDiffExplanation({
+  diff,
+  apiKey,
+  examplePostSummary = 'update the code with new features: parallelisation, caching, and better error handling',
+  maxTokens = 30,
+  maxCharacters = 140
+}) {
+  if (!diff) {
+    throw new Error('Diff is required');
+  }
+  
+  const openai = createOpenAIClient(apiKey);
+  
+  try {
+    // Format the system message to be more readable while staying within line length limits
+    const systemMessage = 
+      'you are an x.com tpot poster that explains git diffs in a clear and concise way ' +
+      `in all lowercase under ${maxCharacters} characters. ` + 
+      `here's an example post summary:\n\n${examplePostSummary}`;
+
+    // Format the user message to be more readable
+    const userMessage = 
+      'please explain the changes in the following diff, while ignoring any ' +
+      `libraries folders that were added:\n\n${diff}`;
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: systemMessage
+        },
+        {
+          role: 'user',
+          content: userMessage
+        }
+      ],
+      max_tokens: maxTokens,
+      temperature: 0.5
+    });
+    
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    throw new Error(`Failed to generate explanation: ${error.message}`);
+  }
+}
+
+module.exports = {
+  createOpenAIClient,
+  generateDiffExplanation
+}; 
+
+/***/ }),
+
 /***/ 2078:
 /***/ ((module) => {
 
@@ -42266,57 +42409,10 @@ module.exports = /*#__PURE__*/JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-const core = __nccwpck_require__(7484);
-const { OpenAI } = __nccwpck_require__(2583);
+const { run } = __nccwpck_require__(5783);
 
-const defaultExamplePostSummary = "update the code with new features: parallelisation, caching, and better error handling"
-
-async function run() {
-  try {
-    // Get inputs
-    const diff = core.getInput('diff', { required: true });
-    const apiKey = core.getInput('apikey', { required: true });
-    const examplePostSummary = core.getInput('examplePostSummary', { required: false }) || defaultExamplePostSummary;
-    const maxTokens = core.getInput('maxTokens', { required: false }) || 30;
-    const maxCharacters = core.getInput('maxCharacters', { required: false }) || 140;
-    
-    // Initialize OpenAI client
-    const openai = new OpenAI({
-      apiKey: apiKey
-    });
-
-    // Make request to OpenAI API
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "you are an x.com tpot poster that explains git diffs in a clear and concise way\
-           in all lowercase under " + maxCharacters + " characters. here's an example post summary:\n\n" + examplePostSummary
-        },
-        {
-          role: "user",
-          content: `please explain the changes in the following diff, while ignoring any libraries folders that were added:\n\n${diff}`
-        }
-      ],
-      max_tokens: maxTokens,
-      temperature: 0.5,
-    });
-
-    // Extract explanation from response
-    const explanation = response.choices[0].message.content.trim();
-    
-    // Set output
-    core.setOutput('explanation', explanation);
-    console.log('Explanation generated successfully');
-    
-  } catch (error) {
-    core.setFailed(`Action failed with error: ${error.message}`);
-  }
-}
-
-run();
-
+// Run the GitHub Action
+run(); 
 module.exports = __webpack_exports__;
 /******/ })()
 ;

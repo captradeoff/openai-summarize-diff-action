@@ -2,6 +2,13 @@
 
 This GitHub Action receives a git diff (e.g., a PR diff) and uses OpenAI to summarize and explain the changes made in that diff in a clear, concise way.
 
+## Features
+
+- Generates concise explanations of code changes
+- Customizable output length and style
+- Easy to integrate into your CI/CD workflow
+- Now includes comprehensive tests and error handling
+
 ## Inputs
 
 ### `diff`
@@ -11,6 +18,19 @@ This GitHub Action receives a git diff (e.g., a PR diff) and uses OpenAI to summ
 ### `apikey`
 
 **Required** Your OpenAI API key. Get one at [OpenAI Platform](https://platform.openai.com/api-keys).
+
+### `examplePostSummary`
+
+**Optional** An example summary to guide the model's output style.
+Default: "update the code with new features: parallelisation, caching, and better error handling"
+
+### `maxTokens`
+
+**Optional** Maximum number of tokens to generate. Default: `30`
+
+### `maxCharacters`
+
+**Optional** Maximum characters in the generated explanation. Default: `140`
 
 ## Outputs
 
@@ -110,8 +130,106 @@ jobs:
           EXPLANATION: ${{ steps.explain.outputs.explanation }}
 ```
 
+## Local Development
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/openai-summarize-diff-action.git
+   cd openai-summarize-diff-action
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file with your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   ```
+
+### Testing
+
+Run tests:
+```bash
+npm test
+```
+
+Run tests with coverage:
+```bash
+npm run test:coverage
+```
+
+Run tests in watch mode (useful during development):
+```bash
+npm run test:watch
+```
+
+### Linting
+
+Run linting:
+```bash
+npm run lint
+```
+
+### Building
+
+Build the action:
+```bash
+npm run build
+```
+
+This will run linting, tests, and then build the action into the `dist` directory.
+
+### Manual Testing
+
+You can test the action locally by creating a test script:
+
+```javascript
+// test-local.js
+require('dotenv').config();
+const { generateDiffExplanation } = require('./src/openai');
+
+async function test() {
+  const diff = `diff --git a/file.js b/file.js
+index 123..456 789
+--- a/file.js
++++ b/file.js
+@@ -1,3 +1,4 @@
+ const a = 1;
++const b = 2;
+ const c = 3;`;
+
+  try {
+    const explanation = await generateDiffExplanation({
+      diff,
+      apiKey: process.env.OPENAI_API_KEY,
+      maxTokens: 50,
+      maxCharacters: 200
+    });
+    
+    console.log('Explanation:', explanation);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+test();
+```
+
+Run the test script:
+```bash
+node test-local.js
+```
+
 ## Notes
 
-- This action uses OpenAI's GPT-3.5-Turbo model by default.
+- This action uses OpenAI's GPT-4o-mini model by default.
 - Make sure to store your OpenAI API key as a secret in your repository settings.
 - The action will ignore library folders to focus on meaningful code changes.
+
+## License
+
+ISC
