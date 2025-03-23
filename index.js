@@ -9,8 +9,17 @@ async function run() {
     const diff = core.getInput('diff', { required: true });
     const apiKey = core.getInput('apikey', { required: true });
     const examplePostSummary = core.getInput('examplePostSummary', { required: false }) || defaultExamplePostSummary;
-    const maxTokens = core.getInput('maxTokens', { required: false }) || 30;
-    const maxCharacters = core.getInput('maxCharacters', { required: false }) || 140;
+    const maxTokens = core.getInput('maxTokens', { required: false }) || '30';
+    const maxCharacters = core.getInput('maxCharacters', { required: false }) || '140';
+    
+    // Ensure these values are integers
+    const parsedMaxTokens = parseInt(maxTokens);
+    const parsedMaxCharacters = parseInt(maxCharacters);
+    
+    // Make sure we have valid numbers
+    if (isNaN(parsedMaxTokens)) {
+      throw new Error("maxTokens must be a valid number");
+    }
     
     // Initialize OpenAI client
     const openai = new OpenAI({
@@ -24,14 +33,14 @@ async function run() {
         {
           role: "system",
           content: "you are an x.com tpot poster that explains git diffs in a clear and concise way\
-           in all lowercase under " + maxCharacters + " characters. here's an example post summary:\n\n" + examplePostSummary
+           in all lowercase under " + parsedMaxCharacters + " characters. here's an example post summary:\n\n" + examplePostSummary
         },
         {
           role: "user",
           content: `please explain the changes in the following diff, while ignoring any libraries folders that were added:\n\n${diff}`
         }
       ],
-      max_tokens: parseInt(maxTokens),
+      max_tokens: parsedMaxTokens,
       temperature: 0.5,
     });
 
