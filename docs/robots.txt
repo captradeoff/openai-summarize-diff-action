@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://captradeoff.github.io/openai-summarize-diff-action/sitemap.xml

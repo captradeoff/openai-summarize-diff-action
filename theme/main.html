@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block extrahead %}
+<meta name="twitter:site" content="@dsyswiki" />
+<meta name="twitter:creator" content="@captradeoff" />
+<!-- RSS Feed -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="RSS feed of created content"
+  href="{{ config.site_url }}feed_rss_created.xml"
+/>
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="RSS feed of updated content"
+  href="{{ config.site_url }}feed_rss_updated.xml"
+/>
+<!-- llms.txt -->
+<link
+  rel="alternate"
+  type="text/plain"
+  title="llms.txt"
+  href="{{ config.site_url }}llms.txt"
+/>
+{% endblock %} {% block footer %}
+<div style="width: 100%; text-align: center; margin: 15px auto;">
+    <a href="#" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), 'TwitterShare', 'width=550,height=680,menubar=no,toolbar=no'); return false;" class="hover-item" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on X
+    </a>
+    <a href="#" onclick="window.open('https://www.linkedin.com/shareArticle?url=' + encodeURIComponent(window.location.href), 'LinkedinShare', 'width=550,height=730,menubar=no,toolbar=no'); return false;" class="hover-item" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on LinkedIn
+    </a>
+</div>
+<p style="text-align: center;">{{ config.copyright }} <a href="/license/">license</a></p>
+<table class="table table-striped table-hover">
+  <tbody>
+    <tr>
+      <td style="text-align: center">
+        <a href="https://x.com/i/communities/1903531139035476424"
+          >join x community</a
+        >
+      </td>
+      <td style="text-align: center">
+        <a href="https://github.com/captradeoff/d-sys-wiki/issues"
+          >open an issue</a
+        >
+      </td>
+      <td style="text-align: center">
+        <a href="https://x.com/captradeoff">follow on x</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">
+        <a href="https://discord.gg/abnrNxa7J5">join discord server</a>
+      </td>
+      <td style="text-align: center">
+        <a href="https://github.com/captradeoff/d-sys-wiki/fork"
+          >fork this repo</a
+        >
+      </td>
+      <td style="text-align: center">
+        <a href="https://github.com/captradeoff">follow on github</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p style="text-align: center;"><a href="https://github.com/captradeoff/d-sys-wiki-documentation-template">d-sys.wiki documentation template</a></p>{% endblock %}

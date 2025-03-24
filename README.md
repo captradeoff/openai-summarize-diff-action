@@ -1,6 +1,9 @@
 # openai summarize diff action
 [![node.js ci](https://github.com/captradeoff/openai-summarize-diff-action/actions/workflows/node.js.yml/badge.svg)](https://github.com/captradeoff/openai-summarize-diff-action/actions/workflows/node.js.yml)
-![GitHub License](https://img.shields.io/github/license/captradeoff/openai-summarize-diff-action)
+![github license](https://img.shields.io/github/license/captradeoff/openai-summarize-diff-action)
+[![github stars](https://img.shields.io/github/stars/captradeoff/openai-summarize-diff-action?style=social)](https://github.com/captradeoff/openai-summarize-diff-action/stargazers)
+[![github forks](https://img.shields.io/github/forks/captradeoff/openai-summarize-diff-action?style=social)](https://github.com/captradeoff/openai-summarize-diff-action/network/members)
+[![twitter follow](https://img.shields.io/twitter/follow/captradeoff?style=social)](https://twitter.com/captradeoff)
 
 this github action receives a git diff (e.g., a pr diff) and uses openai to summarize and explain the changes made in that diff in a clear, concise way.
 

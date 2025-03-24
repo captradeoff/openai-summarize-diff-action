@@ -1,0 +1,69 @@
+site_name: openai summarize diff action
+site_url: https://captradeoff.github.io/openai-summarize-diff-action
+site_description: github action to create human-readable summaries of code changes using openai
+site_author: captradeoff
+repo_url: https://github.com/captradeoff/openai-summarize-diff-action
+edit_uri: edit/master/docs/
+docs_dir: docs
+
+nav:
+  - home: index.md
+  - get started:
+    - getting started: getting-started.md
+    - configuration: configuration.md
+    - examples: examples.md
+  - developer docs:
+    - overview: development/index.md
+    - architecture: development/architecture.md
+    - troubleshooting: development/troubleshooting.md
+    - contributing: contributing.md
+  - rss: feed_rss_updated.xml
+  - llms: llms.txt
+  
+plugins:
+  - ultralytics:
+      verbose: True
+      enabled: True
+      default_image: "https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg"
+      default_author: "@captradeoff"
+      add_desc: True
+      add_image: True
+      add_keywords: True
+      add_share_buttons: False
+      add_json_ld: True
+  - rss
+  - llmstxt:
+      files:
+        - output: llms.txt
+          inputs:
+            - "**.md"
+  - search
+  - git-revision-date
+  - spellcheck:
+
+theme:
+  name: terminal
+  custom_dir: theme
+  palette: gruvbox_dark
+  features:
+    - footer.prev_next
+    - navigation.side.indexes
+    - navigation.top.cursor_animation.hide
+    - revision.date
+    - revision.history
+
+markdown_extensions:
+  - md_in_html
+  - toc:
+      permalink: "⁂"
+      permalink_title: Anchor link to this section for reference
+
+extra_css:
+  - style.css
+
+extra:
+  social:
+    image: docs/img/captradeoff.png
+    description: "github action that uses openai to summarize and explain git diffs"
+    title: "openai summarize diff action"
+
