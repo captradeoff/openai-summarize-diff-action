@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+<meta content="mkdocs-1.6.1, mkdocs-terminal-4.7.0" name="generator"/>
+<meta content="this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase." name="description"/>
+<meta content="captradeoff" name="author"/>
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/development/architecture/" rel="canonical"/><link href="../../img/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png">
+<link href="../../img/android-chrome-512x512.png" rel="icon" sizes="512x512" type="image/png"/>
+<link href="../../img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="../../img/favicon.ico" rel="shortcut icon" sizes="48x48" type="image/png"/>
+<link href="../../img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="../../img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+<title>architecture - openai summarize diff action</title>
+<link href="../../css/fontawesome/css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../css/fontawesome/css/solid.min.css" rel="stylesheet"/>
+<link href="../../css/normalize.css" rel="stylesheet"/>
+<link href="../../css/terminal.css" rel="stylesheet"/>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme.tile_grid.css" rel="stylesheet"/>
+<link href="../../css/theme.footer.css" rel="stylesheet"/>
+<!-- gruvbox_dark color palette -->
+<link href="../../css/palettes/gruvbox_dark.css" rel="stylesheet"/>
+<!-- page layout -->
+<style>
+/* initially set page layout to a one column grid */
+.terminal-mkdocs-main-grid {
+    display: grid;
+    grid-column-gap: 1.4em;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+}
+
+/*  
+*   when side navigation is not hidden, use a two column grid.  
+*   if the screen is too narrow, fall back to the initial one column grid layout.
+*   in this case the main content will be placed under the navigation panel. 
+*/
+@media only screen and (min-width: 70em) {
+    .terminal-mkdocs-main-grid {
+        grid-template-columns: 4fr 9fr;
+    }
+}</style>
+<!-- cursor_animation override -->
+<style>
+  #mkdocs-terminal-site-name.terminal-prompt::after {
+      display: none;
+  }
+</style>
+<link href="../../style.css" rel="stylesheet"/>
+<meta content="@dsyswiki" name="twitter:site">
+<meta content="@captradeoff" name="twitter:creator">
+<!-- RSS Feed -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_created.xml" rel="alternate" title="RSS feed of created content" type="application/rss+xml">
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml">
+<!-- llms.txt -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/llms.txt" rel="alternate" title="llms.txt" type="text/plain">
+<!-- search css support -->
+<link href="../../css/search/bootstrap-modal.css" rel="stylesheet"/>
+<!-- search scripts -->
+<script>
+    var base_url = "../..",
+    shortcuts = "{}";
+</script>
+<script defer="" src="../../js/jquery/jquery-1.10.1.min.js"></script>
+<script defer="" src="../../js/bootstrap/bootstrap.min.js"></script>
+<script defer="" src="../../js/mkdocs/base.js"></script>
+<script src="../../search/main.js"></script>
+</link></link></link></meta></meta></link><meta content="architecture" name="title"/><meta content="website" property="og:type"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/development/architecture" property="og:url"/><meta content="architecture" property="og:title"/><meta content="this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase." property="og:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="og:image"/><meta content="summary_large_image" property="twitter:card"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/development/architecture" property="twitter:url"/><meta content="architecture" property="twitter:title"/><meta content="this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase." property="twitter:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="twitter:image"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "architecture", "image": ["https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg"], "datePublished": "2025-03-23 22:15:55 -0700", "dateModified": "2025-03-23 22:15:55 -0700", "author": [{"@type": "Organization", "name": "Ultralytics", "url": "https://ultralytics.com/"}], "abstract": "this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase."}</script></head>
+<body class="terminal"><div class="container">
+<div class="terminal-nav">
+<header class="terminal-logo">
+<div class="logo terminal-prompt" id="mkdocs-terminal-site-name"><a class="no-style" href="https://captradeoff.github.io/openai-summarize-diff-action/">openai summarize diff action</a></div>
+</header>
+<nav class="terminal-menu">
+<ul typeof="BreadcrumbList" vocab="https://schema.org/">
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../.." property="item" typeof="WebPage">
+<span property="name">home</span>
+</a>
+<meta content="0" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../../feed_rss_updated.xml" property="item" typeof="WebPage">
+<span property="name">rss</span>
+</a>
+<meta content="1" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../../llms.txt" property="item" typeof="WebPage">
+<span property="name">llms</span>
+</a>
+<meta content="2" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" data-target="#mkdocs_search_modal" data-toggle="modal" href="#" property="item" typeof="SearchAction">
+<i aria-hidden="true" class="fa fa-search"></i> <span property="name">Search</span>
+</a>
+<meta content="3" property="position"/>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="container">
+<div class="terminal-mkdocs-main-grid"><aside id="terminal-mkdocs-side-panel"><nav>
+<ul class="terminal-mkdocs-side-nav-items">
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../..">home</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item terminal-mkdocs-side-nav-section-no-index">get started</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../getting-started/">getting started</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../configuration/">configuration</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../examples/">examples</a>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item--active terminal-mkdocs-side-nav-section-no-index">developer docs</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../">overview</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<span class="terminal-mkdocs-side-nav-item--active">architecture</span>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../troubleshooting/">troubleshooting</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../contributing/">contributing</a>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../feed_rss_updated.xml">rss</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../llms.txt">llms</a>
+</li>
+</ul>
+</nav><hr/>
+<nav>
+<ul>
+<li><a href="#architecture-overview">architecture overview</a></li>
+<li><a href="#overview">overview</a></li><li><a href="#components">components</a></li><li><a href="#data-flow">data flow</a></li><li><a href="#design-decisions">design decisions</a></li><li><a href="#testing-strategy">testing strategy</a></li><li><a href="#performance-considerations">performance considerations</a></li><li><a href="#future-architecture-considerations">future architecture considerations</a></li><li><a href="#dependency-graph">dependency graph</a></li><li><a href="#configuration-flow">configuration flow</a></li><li><a href="#code-organization">code organization</a></li>
+</ul>
+</nav>
+</aside>
+<main id="terminal-mkdocs-main-content">
+<section id="mkdocs-terminal-content">
+<h1 id="architecture-overview">architecture overview<a class="headerlink" href="#architecture-overview" title="Anchor link to this section for reference">⁂</a></h1>
+<p>this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase.</p>
+<h2 id="overview">overview<a class="headerlink" href="#overview" title="Anchor link to this section for reference">⁂</a></h2>
+<p>the openai summarize diff action is designed to:</p>
+<ol>
+<li>receive a git diff as input</li>
+<li>send the diff to openai's api for analysis</li>
+<li>return a human-readable explanation of the changes</li>
+</ol>
+<p>the architecture follows a modular design with clear separation of concerns.</p>
+<h2 id="components">components<a class="headerlink" href="#components" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="core-components">core components<a class="headerlink" href="#core-components" title="Anchor link to this section for reference">⁂</a></h3>
+<ul>
+<li><strong>action entry point</strong> (<code>src/index.js</code>): coordinates the overall workflow</li>
+<li><strong>openai client</strong> (<code>src/openai.js</code>): manages interactions with the openai api</li>
+<li><strong>diff processing</strong> (<code>src/diff.js</code>): handles parsing and preprocessing of git diffs</li>
+<li><strong>error handling</strong> (<code>src/errors.js</code>): provides standardized error handling</li>
+</ul>
+<h2 id="data-flow">data flow<a class="headerlink" href="#data-flow" title="Anchor link to this section for reference">⁂</a></h2>
+<ol>
+<li>the github action is triggered and inputs are collected</li>
+<li>inputs are validated</li>
+<li>the openai client is initialized</li>
+<li>the diff is preprocessed (e.g., trimmed if too large)</li>
+<li>the diff is sent to openai with a carefully crafted prompt</li>
+<li>the explanation is received from openai</li>
+<li>the explanation is processed and returned as an output</li>
+</ol>
+<h2 id="design-decisions">design decisions<a class="headerlink" href="#design-decisions" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="prompt-engineering">prompt engineering<a class="headerlink" href="#prompt-engineering" title="Anchor link to this section for reference">⁂</a></h3>
+<p>the action uses a specific prompting strategy to get high-quality explanations:</p>
+<pre><code class="language-javascript">const systemMessage = `You are an expert developer tasked with explaining code changes in a clear, 
+concise manner. Analyze the following git diff and provide a human-readable explanation 
+of what has changed and why it might have been changed.`;
+
+const userMessage = `Please explain this diff in ${maxCharacters} characters or less:
+\`\`\`
+${diff}
+\`\`\`
+
+Example of a good explanation format:
+"${examplePostSummary}"`;
+</code></pre>
+<h3 id="error-handling-strategy">error handling strategy<a class="headerlink" href="#error-handling-strategy" title="Anchor link to this section for reference">⁂</a></h3>
+<p>the action implements robust error handling with exponential backoff for api calls:</p>
+<pre><code class="language-javascript">async function callWithRetry(fn, maxRetries = 3, initialDelay = 1000) {
+  let retries = 0;
+
+  while (true) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (retries &gt;= maxRetries || !isRetryableError(error)) {
+        throw error;
+      }
+
+      const delay = initialDelay * Math.pow(2, retries);
+      console.log(`Retry ${retries + 1}/${maxRetries} after ${delay}ms`);
+      await new Promise(resolve =&gt; setTimeout(resolve, delay));
+      retries++;
+    }
+  }
+}
+</code></pre>
+<h2 id="testing-strategy">testing strategy<a class="headerlink" href="#testing-strategy" title="Anchor link to this section for reference">⁂</a></h2>
+<p>the project follows a comprehensive testing strategy:</p>
+<ol>
+<li><strong>unit tests</strong>: test individual functions in isolation</li>
+<li><strong>integration tests</strong>: test interactions between components</li>
+<li><strong>e2e tests</strong>: test the entire action workflow</li>
+</ol>
+<h2 id="performance-considerations">performance considerations<a class="headerlink" href="#performance-considerations" title="Anchor link to this section for reference">⁂</a></h2>
+<p>several optimizations are made to ensure efficient operation:</p>
+<ol>
+<li><strong>diff preprocessing</strong>: large diffs are trimmed to avoid token limits</li>
+<li><strong>output formatting</strong>: the output is designed to be concise but informative</li>
+<li><strong>caching</strong>: frequently used operations are cached</li>
+</ol>
+<h2 id="future-architecture-considerations">future architecture considerations<a class="headerlink" href="#future-architecture-considerations" title="Anchor link to this section for reference">⁂</a></h2>
+<p>potential future enhancements to the architecture:</p>
+<ol>
+<li>support for different openai models</li>
+<li>more sophisticated diff preprocessing</li>
+<li>enhanced customization options for the output format</li>
+</ol>
+<h2 id="dependency-graph">dependency graph<a class="headerlink" href="#dependency-graph" title="Anchor link to this section for reference">⁂</a></h2>
+<pre><code>action.yml
+└── src/index.js
+    ├── src/openai.js
+    │   └── openai (external)
+    ├── src/diff.js
+    └── src/errors.js
+</code></pre>
+<h2 id="configuration-flow">configuration flow<a class="headerlink" href="#configuration-flow" title="Anchor link to this section for reference">⁂</a></h2>
+<p>the action's behavior can be configured through several inputs:</p>
+<ol>
+<li><strong>diff</strong>: the git diff to be explained (required)</li>
+<li><strong>apikey</strong>: the openai api key (required)</li>
+<li><strong>examplePostSummary</strong>: example of a good summary (optional)</li>
+<li><strong>maxTokens</strong>: maximum tokens for the openai response (optional)</li>
+<li><strong>maxCharacters</strong>: maximum characters in the output (optional)</li>
+</ol>
+<h2 id="code-organization">code organization<a class="headerlink" href="#code-organization" title="Anchor link to this section for reference">⁂</a></h2>
+<p>the code follows a modular organization:</p>
+<pre><code>src/
+├── index.js       # Main entry point and workflow coordination
+├── openai.js      # OpenAI API client and interaction logic
+├── diff.js        # Diff parsing and preprocessing utilities
+└── errors.js      # Error types and handling utilities
+</code></pre>
+<p>each module has a single responsibility, making the code easier to maintain and extend. </p>
+</section>
+<section id="mkdocs-terminal-after-content">
+</section>
+</main>
+</div>
+<hr/>
+<div style="width: 100%; text-align: center; margin: 15px auto;">
+<a class="hover-item" href="#" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), 'TwitterShare', 'width=550,height=680,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on X
+    </a>
+<a class="hover-item" href="#" onclick="window.open('https://www.linkedin.com/shareArticle?url=' + encodeURIComponent(window.location.href), 'LinkedinShare', 'width=550,height=730,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on LinkedIn
+    </a>
+</div>
+<p style="text-align: center;">None <a href="/license/">license</a></p>
+<table class="table table-striped table-hover">
+<tbody>
+<tr>
+<td style="text-align: center">
+<a href="https://x.com/i/communities/1903531139035476424">join x community</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/issues">open an issue</a>
+</td>
+<td style="text-align: center">
+<a href="https://x.com/captradeoff">follow on x</a>
+</td>
+</tr>
+<tr>
+<td style="text-align: center">
+<a href="https://discord.gg/abnrNxa7J5">join discord server</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/fork">fork this repo</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff">follow on github</a>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;"><a href="https://github.com/captradeoff/d-sys-wiki-documentation-template">d-sys.wiki documentation template</a></p>
+</div>
+<div aria-labelledby="searchModalLabel" aria-modal="true" class="modal" id="mkdocs_search_modal" role="alertdialog" tabindex="-1">
+<div class="modal-dialog modal-lg" role="search">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="searchModalLabel">Search</h5>
+<button class="close btn btn-default btn-ghost" data-dismiss="modal" type="button"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
+<p id="searchInputLabel">Type to start searching</p>
+<form>
+<div class="form-group">
+<input aria-labelledby="searchInputLabel" class="form-control" id="mkdocs-search-query" placeholder="" title="Please enter search terms here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No document matches found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1187 @@
+# openai summarize diff action
+
+> **smart ai summaries for your code changes** - get concise, automated explanations of your git diffs using openai.
+
+this github action receives the last git diff and uses openai to generate a human-readable summary that explains the changes in clear, concise language. perfect for pr descriptions, release notes, or commit messages.
+
+## documentation
+
+### getting started
+
+- [⚡ getting started](getting-started/) - quick setup guide
+- [📘 usage examples](examples/) - common usage patterns
+- [🛠️ configuration options](configuration/) - all available settings
+
+### developer resources
+
+- [👩‍💻 development guide](development/) - contribute to this project
+- [🏗️ architecture](development/architecture/) - understand how it works
+- [🔍 troubleshooting](development/troubleshooting/) - solve common issues
+- [🤝 contributing](contributing/) - how to contribute
+
+## key features
+
+- **concise explanations** - generates clear, readable summaries of code changes
+- **customizable output** - control summary length, style, and formatting
+- **ci/cd integration** - easy to incorporate into your existing github workflows
+- **robust error handling** - comprehensive testing and graceful failure modes
+- **dev-friendly** - well-documented api and simple integration options
+
+## example output
+
+for a diff that adds error handling to a function:
+
+```
+error handling implementation:
+  - added detailed logging for runtime exceptions
+  - implemented fallback mechanism for failed operations
+  - integrated with existing monitoring system
+
+```
+
+for a diff that updates dependencies:
+
+```
+dependency updates:
+  - bumped react from v17.0 to v18.2
+  - fixed security vulnerabilities in lodash
+  - removed deprecated packages
+
+```
+
+## star this repo! ⭐
+
+if you find this action useful, please star the repository to help others discover it!
+
+# configuration options
+
+this page documents all the configuration options available for the openai summarize diff action.
+
+## input parameters
+
+the action accepts the following inputs, which can be specified in your workflow file:
+
+| parameter | required | default | description | | --- | --- | --- | --- | | `diff` | yes | - | the git diff to be explained. typically generated via `git diff` command. | | `apikey` | yes | - | your openai api key. should be stored as a secret. | | `examplePostSummary` | no | "update the code with new features: parallelisation, caching, and better error handling" | an example summary to guide the model's output style. | | `maxTokens` | no | 30 | maximum number of tokens to generate. this affects the length of the generated explanation. | | `maxCharacters` | no | 140 | maximum characters in the generated explanation. useful for ensuring the explanation fits in limited spaces. |
+
+## detailed parameter information
+
+### `diff`
+
+the git diff to be explained. this should be the output from a git diff command. you'll typically generate this in your workflow using a command like:
+
+```
+git diff origin/${{ github.event.pull_request.base.ref }}..HEAD
+
+```
+
+the diff should be provided in the standard git diff format:
+
+```
+diff --git a/file.js b/file.js
+index 123..456 789
+--- a/file.js
++++ b/file.js
+@@ -1,3 +1,4 @@
+ const a = 1;
++const b = 2;
+ const c = 3;
+
+```
+
+### `apikey`
+
+your openai api key. this should be stored as a github repository secret and referenced in your workflow like this:
+
+```
+apikey: ${{ secrets.OPENAI_API_KEY }}
+
+```
+
+never hardcode your api key directly in the workflow file.
+
+### `examplePostSummary`
+
+an example summary to guide the model's output style. this helps the openai model understand the tone, format, and style you want for the generated explanation.
+
+examples:
+
+- `"feat: added user authentication and improved error handling"`
+- `"fix: resolved memory leak in data processing pipeline"`
+- `"refactor: simplified API response handling for better maintainability"`
+
+### `maxTokens`
+
+maximum number of tokens to generate. openai models use tokens, which are chunks of text (roughly 4 characters per token in english). this parameter limits the length of the generated explanation.
+
+recommended values:
+
+- short summaries: 20-30
+- medium explanations: 50-100
+- detailed explanations: 100-200
+
+note that higher values may result in higher api costs.
+
+### `maxCharacters`
+
+maximum characters in the generated explanation. this parameter ensures the explanation fits within specific character limits (like tweet length, commit message limits, etc.)
+
+recommended values:
+
+- tweet-like: 140-280
+- commit message: ~50-72
+- pr comment: 500-1000
+
+## output parameters
+
+| parameter | description | | --- | --- | | `explanation` | the generated explanation of the diff. |
+
+## usage examples
+
+### basic usage
+
+```
+- name: Explain Diff
+  id: explain
+  uses: captradeoff/openai-summarize-diff-action@main
+  with:
+    diff: ${{ env.DIFF }}
+    apikey: ${{ secrets.OPENAI_API_KEY }}
+
+```
+
+### custom summary style
+
+```
+- name: Explain Diff
+  id: explain
+  uses: captradeoff/openai-summarize-diff-action@main
+  with:
+    diff: ${{ env.DIFF }}
+    apikey: ${{ secrets.OPENAI_API_KEY }}
+    examplePostSummary: "feat: updated api with improved performance and better error messages"
+
+```
+
+### longer output
+
+```
+- name: Explain Diff
+  id: explain
+  uses: captradeoff/openai-summarize-diff-action@main
+  with:
+    diff: ${{ env.DIFF }}
+    apikey: ${{ secrets.OPENAI_API_KEY }}
+    maxTokens: 100
+    maxCharacters: 500
+
+```
+
+## using the output
+
+you can use the `explanation` output in subsequent steps:
+
+```
+- name: Output explanation
+  run: echo "${{ steps.explain.outputs.explanation }}"
+
+```
+
+or add it as a pr comment:
+
+```
+- name: Post comment
+  uses: actions/github-script@v7
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    script: |
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: `## 🤖 AI Summary of Changes\n\n${{ steps.explain.outputs.explanation }}`
+      });
+
+```
+
+## best practices
+
+1. **store api keys securely**: always use github secrets for your openai api key.
+1. **optimize token usage**: use the minimum number of tokens needed to get a good summary to minimize costs.
+1. **provide example summaries**: for more consistent results, provide example summaries that match your desired style.
+1. **filter large diffs**: consider filtering out large auto-generated files from diffs for better results.
+1. **handle error cases**: add error handling in your workflow for cases where the openai api might fail.
+
+# contributing guide
+
+thank you for your interest in contributing to the openai summarize diff action! this document provides guidelines and instructions for contributing to this project.
+
+## code of conduct
+
+we expect all contributors to follow our code of conduct. please be respectful and considerate of others when contributing to this project.
+
+## how to contribute
+
+there are many ways to contribute to this project:
+
+1. **report bugs**: if you find a bug, please [create an issue](https://github.com/captradeoff/openai-summarize-diff-action/issues/new) with details on how to reproduce it.
+1. **suggest features**: if you have an idea for a new feature, [create an issue](https://github.com/captradeoff/openai-summarize-diff-action/issues/new) with your suggestion.
+1. **submit pull requests**: if you'd like to fix a bug or implement a feature, submit a pull request with your changes.
+
+## development setup
+
+to set up your development environment:
+
+1. fork the repository on github.
+1. clone your fork locally: `bash git clone https://github.com/yourusername/openai-summarize-diff-action.git cd openai-summarize-diff-action`
+1. install dependencies: `bash npm install`
+1. create a branch for your changes: `bash git checkout -b my-feature-branch`
+1. make your changes and commit them with a clear commit message.
+1. push your branch to your fork: `bash git push origin my-feature-branch`
+1. create a pull request from your fork to the main repository.
+
+## coding standards
+
+- follow the existing code style and formatting conventions.
+- write clear, concise comments and commit messages.
+- add tests for new features or bug fixes.
+- ensure all tests pass before submitting a pull request.
+- update documentation as needed.
+
+## release process
+
+the release process is managed by the project maintainers. the general workflow is:
+
+1. changes are merged into the main branch.
+1. maintainers decide when to create a new release based on the changes.
+1. a new version is tagged according to [semantic versioning](https://semver.org/).
+1. a github release is created with release notes.
+
+## license
+
+by contributing to this project, you agree that your contributions will be licensed under the project's license.
+
+## questions and acknowledgements
+
+if you have any questions about contributing, please [open an issue](https://github.com/captradeoff/openai-summarize-diff-action/issues/new) or contact the project maintainers.
+
+thank you for contributing to the openai summarize diff action!
+
+# usage examples
+
+this page provides a variety of examples for using the openai summarize diff action in different scenarios.
+
+## basic examples
+
+### summarize pr changes
+
+the most basic usage is to summarize changes in a pull request and display the result in the workflow logs:
+
+```
+name: Summarize PR Changes
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Output explanation
+        run: echo "${{ steps.explain.outputs.explanation }}"
+
+```
+
+## github integration examples
+
+### add summary as pr comment
+
+automatically add the generated summary as a comment on the pr:
+
+```
+name: Summarize PR Changes and Comment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Post comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const explanation = process.env.EXPLANATION;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 AI Summary of Changes\n\n${explanation}`
+            });
+        env:
+          EXPLANATION: ${{ steps.explain.outputs.explanation }}
+
+```
+
+### update pr description
+
+add the summary to the pr description instead of as a comment:
+
+```
+name: Update PR Description with Summary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  update-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Get PR Description
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            return pr.data.body || '';
+          result-encoding: string
+
+      - name: Update PR Description
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const explanation = process.env.EXPLANATION;
+            const currentBody = process.env.CURRENT_BODY;
+
+            // Remove old summary if it exists
+            let newBody = currentBody.replace(/## 🤖 AI Summary of Changes[\s\S]*?(?=##|$)/, '');
+
+            // Add new summary
+            newBody = `${newBody}\n\n## 🤖 AI Summary of Changes\n\n${explanation}\n\n`;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newBody
+            });
+        env:
+          EXPLANATION: ${{ steps.explain.outputs.explanation }}
+          CURRENT_BODY: ${{ steps.pr.outputs.result }}
+
+```
+
+## advanced examples
+
+### generate release notes
+
+automatically create release notes when a tag is pushed:
+
+```
+name: Generate Release Notes
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: previoustag
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "PREV_TAG=$PREV_TAG" >> $GITHUB_ENV
+
+      - name: Get diff
+        id: diff
+        run: |
+          DIFF=$(git diff $PREV_TAG..HEAD)
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Generate release notes
+        id: notes
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+          examplePostSummary: "Release includes: improved performance, new UI components, and better error handling"
+          maxTokens: 100
+          maxCharacters: 500
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            # AI-Generated Release Notes
+
+            ${{ steps.notes.outputs.explanation }}
+
+            ---
+
+            *Generated automatically by OpenAI Summarize Diff Action*
+          draft: false
+          prerelease: false
+
+```
+
+### custom diff format and filtering
+
+filter the diff to exclude certain files before summarizing:
+
+```
+name: Summarize PR with Filtering
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-filtered-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get filtered diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          # Exclude package-lock.json, node_modules, and build outputs
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD -- . ':(exclude)package-lock.json' ':(exclude)node_modules/**' ':(exclude)dist/**')
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Output explanation
+        run: echo "${{ steps.explain.outputs.explanation }}"
+
+```
+
+## additional resources
+
+- [configuration options](../configuration/) - learn about all available configuration options
+- [api reference](api-reference.md) - detailed information about inputs and outputs
+- [development guide](../development/) - contribute to this project
+
+# getting started
+
+this guide will help you quickly set up and configure the openai summarize diff action in your github workflow.
+
+## prerequisites
+
+- a github repository where you want to implement this action
+- an openai api key (get one at [openai platform](https://platform.openai.com/api-keys))
+
+## basic setup
+
+### step 1: add your openai api key as a secret
+
+1. navigate to your github repository
+1. go to **settings** > **secrets and variables** > **actions**
+1. click **new repository secret**
+1. name: `OPENAI_API_KEY`
+1. value: your openai api key
+1. click **add secret**
+
+### step 2: create a workflow file
+
+create a new file in `.github/workflows/summarize-diff.yml` with the following content:
+
+```
+name: Summarize PR Changes
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$DIFF" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Output explanation
+        run: echo "${{ steps.explain.outputs.explanation }}"
+
+```
+
+that's it! now when a pull request is opened or updated, this action will generate a summary of the changes.
+
+## common customizations
+
+### adding comment to pr
+
+to automatically add the summary as a comment on your pr:
+
+```
+- name: Post comment
+  uses: actions/github-script@v7
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    script: |
+      const explanation = process.env.EXPLANATION;
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: `## 🤖 AI Summary of Changes\n\n${explanation}`
+      });
+  env:
+    EXPLANATION: ${{ steps.explain.outputs.explanation }}
+
+```
+
+### custom output formatting
+
+you can customize how the explanation is generated:
+
+```
+- name: Explain Diff
+  id: explain
+  uses: captradeoff/openai-summarize-diff-action@main
+  with:
+    diff: ${{ env.DIFF }}
+    apikey: ${{ secrets.OPENAI_API_KEY }}
+    examplePostSummary: "feat: added new login system with improved security"
+    maxTokens: 50
+    maxCharacters: 200
+
+```
+
+## tips for best results
+
+1. **keep diffs focused**: the action works best with focused changes rather than massive refactorings
+1. **use concise example summaries**: the `examplePostSummary` parameter helps guide the style of output
+1. **handle large repositories**: for very large repositories, consider using shallow clones to speed up the action
+
+## next steps
+
+- [📘 usage examples](../examples/) - see more examples of the action in use
+- [🛠️ configuration options](../configuration/) - learn all the configuration options
+- [🧩 api reference](api-reference.md) - detailed information about inputs and outputs
+- [🔍 troubleshooting](../development/troubleshooting/) - solutions for common issues
+
+MIT License
+
+Copyright (c) 2019 GitHub Actions
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# development guide
+
+this guide provides information for developers who want to contribute to the openai summarize diff action or understand its inner workings.
+
+## overview
+
+the openai summarize diff action is a github action that uses openai's apis to generate human-readable explanations of code changes. this document covers local development setup, testing, and contribution guidelines.
+
+## local development setup
+
+to set up your development environment:
+
+1. clone the repository: `bash git clone https://github.com/captradeoff/openai-summarize-diff-action.git cd openai-summarize-diff-action`
+1. install dependencies: `bash npm install`
+1. set up your environment variables: \`bash cp .env.example .env
+   # Edit .env file with your OpenAI API key\`
+
+## project structure
+
+the project is organized as follows:
+
+```
+openai-summarize-diff-action/
+├── .github/           # GitHub workflows and configuration
+├── dist/              # Compiled JavaScript (don't edit directly)
+├── src/               # Source code
+│   ├── index.js       # Main entry point
+│   ├── openai.js      # OpenAI API integration
+│   └── utils.js       # Utility functions
+├── tests/             # Test files
+├── docs/              # Documentation
+├── action.yml         # GitHub Action definition
+├── package.json       # Dependencies and scripts
+└── README.md          # Project overview
+
+```
+
+## development workflow
+
+### testing
+
+run tests:
+
+```
+npm test
+
+```
+
+run tests with coverage:
+
+```
+npm run test:coverage
+
+```
+
+run tests in watch mode (useful during development):
+
+```
+npm run test:watch
+
+```
+
+### linting
+
+run linting:
+
+```
+npm run lint
+
+```
+
+### building
+
+build the action:
+
+```
+npm run build
+
+```
+
+this will run linting, tests, and then build the action into the `dist` directory.
+
+### manual testing
+
+you can test the action locally by creating a test script:
+
+```
+// test-local.js
+require('dotenv').config();
+const { generateDiffExplanation } = require('./src/openai');
+
+async function test() {
+  const diff = `diff --git a/file.js b/file.js
+index 123..456 789
+--- a/file.js
++++ b/file.js
+@@ -1,3 +1,4 @@
+ const a = 1;
++const b = 2;
+ const c = 3;`;
+
+  try {
+    const explanation = await generateDiffExplanation({
+      diff,
+      apiKey: process.env.OPENAI_API_KEY,
+      maxTokens: 50,
+      maxCharacters: 200
+    });
+
+    console.log('Explanation:', explanation);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+test();
+
+```
+
+run the test script:
+
+```
+node test-local.js
+
+```
+
+## creating a release
+
+to create a new release:
+
+1. update the version in package.json
+1. update the changelog.md file
+1. commit and push your changes
+1. create a new release on github with a new tag (e.g., v1.0.0)
+
+## additional resources
+
+- [architecture documentation](architecture/) - understand the codebase structure
+- [troubleshooting guide](troubleshooting/) - solutions for common issues
+- [contributing guidelines](../contributing/) - how to contribute effectively
+
+## getting help
+
+if you encounter issues during development, please:
+
+1. check the [troubleshooting guide](troubleshooting/)
+1. search for existing issues in the github repository
+1. create a new issue if your problem hasn't been reported yet
+
+# architecture overview
+
+this document provides an in-depth look at the architecture of the openai summarize diff action, designed for developers who want to understand or contribute to the codebase.
+
+## overview
+
+the openai summarize diff action is designed to:
+
+1. receive a git diff as input
+1. send the diff to openai's api for analysis
+1. return a human-readable explanation of the changes
+
+the architecture follows a modular design with clear separation of concerns.
+
+## components
+
+### core components
+
+- **action entry point** (`src/index.js`): coordinates the overall workflow
+- **openai client** (`src/openai.js`): manages interactions with the openai api
+- **diff processing** (`src/diff.js`): handles parsing and preprocessing of git diffs
+- **error handling** (`src/errors.js`): provides standardized error handling
+
+## data flow
+
+1. the github action is triggered and inputs are collected
+1. inputs are validated
+1. the openai client is initialized
+1. the diff is preprocessed (e.g., trimmed if too large)
+1. the diff is sent to openai with a carefully crafted prompt
+1. the explanation is received from openai
+1. the explanation is processed and returned as an output
+
+## design decisions
+
+### prompt engineering
+
+the action uses a specific prompting strategy to get high-quality explanations:
+
+```
+const systemMessage = `You are an expert developer tasked with explaining code changes in a clear, 
+concise manner. Analyze the following git diff and provide a human-readable explanation 
+of what has changed and why it might have been changed.`;
+
+const userMessage = `Please explain this diff in ${maxCharacters} characters or less:
+\`\`\`
+${diff}
+\`\`\`
+
+Example of a good explanation format:
+"${examplePostSummary}"`;
+
+```
+
+### error handling strategy
+
+the action implements robust error handling with exponential backoff for api calls:
+
+```
+async function callWithRetry(fn, maxRetries = 3, initialDelay = 1000) {
+  let retries = 0;
+
+  while (true) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (retries >= maxRetries || !isRetryableError(error)) {
+        throw error;
+      }
+
+      const delay = initialDelay * Math.pow(2, retries);
+      console.log(`Retry ${retries + 1}/${maxRetries} after ${delay}ms`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      retries++;
+    }
+  }
+}
+
+```
+
+## testing strategy
+
+the project follows a comprehensive testing strategy:
+
+1. **unit tests**: test individual functions in isolation
+1. **integration tests**: test interactions between components
+1. **e2e tests**: test the entire action workflow
+
+## performance considerations
+
+several optimizations are made to ensure efficient operation:
+
+1. **diff preprocessing**: large diffs are trimmed to avoid token limits
+1. **output formatting**: the output is designed to be concise but informative
+1. **caching**: frequently used operations are cached
+
+## future architecture considerations
+
+potential future enhancements to the architecture:
+
+1. support for different openai models
+1. more sophisticated diff preprocessing
+1. enhanced customization options for the output format
+
+## dependency graph
+
+```
+action.yml
+└── src/index.js
+    ├── src/openai.js
+    │   └── openai (external)
+    ├── src/diff.js
+    └── src/errors.js
+
+```
+
+## configuration flow
+
+the action's behavior can be configured through several inputs:
+
+1. **diff**: the git diff to be explained (required)
+1. **apikey**: the openai api key (required)
+1. **examplePostSummary**: example of a good summary (optional)
+1. **maxTokens**: maximum tokens for the openai response (optional)
+1. **maxCharacters**: maximum characters in the output (optional)
+
+## code organization
+
+the code follows a modular organization:
+
+```
+src/
+├── index.js       # Main entry point and workflow coordination
+├── openai.js      # OpenAI API client and interaction logic
+├── diff.js        # Diff parsing and preprocessing utilities
+└── errors.js      # Error types and handling utilities
+
+```
+
+each module has a single responsibility, making the code easier to maintain and extend.
+
+# Troubleshooting
+
+This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action.
+
+## GitHub Action Issues
+
+### Action Fails with "OpenAI API key is required"
+
+**Problem**: The action fails with the error message "OpenAI API key is required."
+
+**Possible causes**:
+
+1. The API key secret is not set in your repository
+1. The secret name in your workflow doesn't match the secret name in your repository
+1. The `apikey` input parameter is not properly referenced in your workflow file
+
+**Solution**:
+
+1. Check that you've added the OpenAI API key as a secret in your repository:
+
+- Go to your repository → Settings → Secrets and variables → Actions
+- Verify that your OpenAI API key is added as a secret (e.g., `OPENAI_API_KEY`)
+
+1. Ensure your workflow file correctly references the secret:
+   ```yaml
+   ```
+1. name: Explain Diff id: explain uses: captradeoff/openai-summarize-diff-action@main with: diff: ${{ env.DIFF }} apikey: ${{ secrets.OPENAI_API_KEY }} # Make sure this matches your secret name
+   ```
+
+   ```
+
+### Action Fails with "Diff is required"
+
+**Problem**: The action fails with the error message "Diff is required."
+
+**Possible causes**:
+
+1. The diff generation in your workflow is failing
+1. The diff is empty (no changes between the compared branches/commits)
+1. The environment variable setting is incorrect
+
+**Solution**:
+
+1. Debug your diff generation step by adding an output step:
+
+```yaml
+- name: Get PR diff
+id: diff
+run: |
+git fetch origin ${{ github.event.pull_request.base.ref }}
+DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+echo "DIFF<> $GITHUB_ENV
+echo "$DIFF" >> $GITHUB_ENV
+echo "EOF" >> $GITHUB_ENV
+
+- name: Debug diff
+  run: echo "${{ env.DIFF }}"
+```
+
+- If the diff is empty, check that:
+- There are actual changes between the branches
+- Your Git fetch depth is sufficient (`fetch-depth: 0` is recommended)
+
+### Action Fails with "maxTokens must be a valid number"
+
+**Problem**: The action fails with the error message "maxTokens must be a valid number."
+
+**Possible causes**:
+
+1. The `maxTokens` parameter is provided but contains a non-numeric value
+1. There's a syntax error in how the parameter is defined
+
+**Solution**:
+
+1. Ensure the `maxTokens` parameter is a number: `yaml maxTokens: 50 # Correct`
+
+Not: `yaml maxTokens: "fifty" # Incorrect`
+
+1. If you're setting it dynamically, ensure it's properly converted to a number.
+
+## OpenAI API Issues
+
+### Action Fails with "Failed to generate explanation: 429 Too Many Requests"
+
+**Problem**: The action fails with a rate limit error from the OpenAI API.
+
+**Possible causes**:
+
+1. You've exceeded your OpenAI API rate limits
+1. Your account has billing issues
+
+**Solution**:
+
+1. Implement retry logic in your workflow for transient rate limit issues
+1. Check your OpenAI account for any billing or rate limit issues
+1. Consider adding a delay between action runs if you're running many in parallel
+
+### Action Returns Empty or Incomplete Explanation
+
+**Problem**: The action runs successfully but returns an empty or truncated explanation.
+
+**Possible causes**:
+
+1. The `maxTokens` parameter is set too low
+1. The diff is very complex or large
+1. The API response was cut off
+
+**Solution**:
+
+1. Increase the `maxTokens` parameter: `yaml maxTokens: 100 # Try a higher value`
+
+1. Increase the `maxCharacters` parameter: `yaml maxCharacters: 500 # Allow for longer explanations`
+
+1. For large diffs, consider filtering to focus on meaningful changes.
+
+## Development Environment Issues
+
+### Tests Failing with "Cannot find module 'openai'"
+
+**Problem**: Tests fail with module not found errors.
+
+**Possible causes**:
+
+1. Dependencies are not installed
+1. The package has been updated and requires a reinstall
+
+**Solution**:
+
+1. Reinstall dependencies: `bash npm ci # Clean install from package-lock.json`
+
+1. If the issue persists, try deleting node_modules and reinstalling: `bash rm -rf node_modules npm install`
+
+### OpenAI Tests Failing Without API Key
+
+**Problem**: OpenAI integration tests fail when no API key is available.
+
+**Possible causes**:
+
+1. You're running tests that require a real OpenAI API key
+1. Mocks are not properly set up
+
+**Solution**:
+
+1. For local development, create a `.env` file with your API key: `OPENAI_API_KEY=your_api_key_here`
+
+1. For CI environments, use mocks instead of real API calls: `javascript // Example of mocking the OpenAI API in tests jest.mock('openai', () => { return { OpenAI: jest.fn().mockImplementation(() => { return { chat: { completions: { create: jest.fn().mockResolvedValue({ choices: [{ message: { content: 'Mocked explanation' } }] }) } } }; }) }; });`
+
+## Build and Deployment Issues
+
+### Action Build Fails
+
+**Problem**: Build process fails with errors.
+
+**Possible causes**:
+
+1. Linting errors
+1. Test failures
+1. Compilation errors
+
+**Solution**:
+
+1. Run each step individually to isolate the issue: `bash npm run lint npm test npm run build`
+
+1. Fix any issues found in the specific step that fails.
+
+### Action Works Locally but Fails in GitHub
+
+**Problem**: The action works in your local testing but fails when deployed to GitHub.
+
+**Possible causes**:
+
+1. Environment differences
+1. Secret configuration issues
+1. Permissions problems
+
+**Solution**:
+
+1. Enable debug logs in GitHub Actions:
+
+- Go to your repository → Settings → Secrets and variables → Actions
+- Add a new repository secret named `ACTIONS_STEP_DEBUG` with the value `true`
+
+1. Check action runs with debug enabled to see detailed logs.
+1. Ensure all required permissions are specified in your workflow: `yaml jobs: explain-diff: runs-on: ubuntu-latest permissions: pull-requests: write # If needed for commenting`
+
+## Common Errors and Solutions
+
+| Error Message | Likely Cause | Solution | | --- | --- | --- | | "OpenAI API key is required" | Missing or incorrect API key | Check API key configuration | | "Diff is required" | Empty or missing diff | Debug diff generation step | | "maxTokens must be a valid number" | Invalid parameter value | Ensure parameters are numeric | | "429 Too Many Requests" | API rate limiting | Check OpenAI usage and billing | | "Failed to generate explanation" | Generic API error | Check API key, request format, and logs |
+
+## Getting Additional Help
+
+If you're encountering issues not covered in this guide:
+
+1. Check the [GitHub Issues](https://github.com/captradeoff/openai-summarize-diff-action/issues) to see if others have reported similar problems
+1. Review the [API Reference](../api-reference.md) for correct parameter usage
+1. Consult the [OpenAI API Documentation](https://platform.openai.com/docs/api-reference) for API-specific issues
+1. Open a new issue with detailed information about the problem, including:
+1. Your workflow file (with secrets redacted)
+1. Error messages
+1. Environment details

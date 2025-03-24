@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+<meta content="mkdocs-1.6.1, mkdocs-terminal-4.7.0" name="generator"/>
+<meta content="this page provides a variety of examples for using the openai summarize diff action in different scenarios." name="description"/>
+<meta content="captradeoff" name="author"/>
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/examples/" rel="canonical"/><link href="../img/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png">
+<link href="../img/android-chrome-512x512.png" rel="icon" sizes="512x512" type="image/png"/>
+<link href="../img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="../img/favicon.ico" rel="shortcut icon" sizes="48x48" type="image/png"/>
+<link href="../img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="../img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+<title>examples - openai summarize diff action</title>
+<link href="../css/fontawesome/css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../css/fontawesome/css/solid.min.css" rel="stylesheet"/>
+<link href="../css/normalize.css" rel="stylesheet"/>
+<link href="../css/terminal.css" rel="stylesheet"/>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme.tile_grid.css" rel="stylesheet"/>
+<link href="../css/theme.footer.css" rel="stylesheet"/>
+<!-- gruvbox_dark color palette -->
+<link href="../css/palettes/gruvbox_dark.css" rel="stylesheet"/>
+<!-- page layout -->
+<style>
+/* initially set page layout to a one column grid */
+.terminal-mkdocs-main-grid {
+    display: grid;
+    grid-column-gap: 1.4em;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+}
+
+/*  
+*   when side navigation is not hidden, use a two column grid.  
+*   if the screen is too narrow, fall back to the initial one column grid layout.
+*   in this case the main content will be placed under the navigation panel. 
+*/
+@media only screen and (min-width: 70em) {
+    .terminal-mkdocs-main-grid {
+        grid-template-columns: 4fr 9fr;
+    }
+}</style>
+<!-- cursor_animation override -->
+<style>
+  #mkdocs-terminal-site-name.terminal-prompt::after {
+      display: none;
+  }
+</style>
+<link href="../style.css" rel="stylesheet"/>
+<meta content="@dsyswiki" name="twitter:site">
+<meta content="@captradeoff" name="twitter:creator">
+<!-- RSS Feed -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_created.xml" rel="alternate" title="RSS feed of created content" type="application/rss+xml">
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml">
+<!-- llms.txt -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/llms.txt" rel="alternate" title="llms.txt" type="text/plain">
+<!-- search css support -->
+<link href="../css/search/bootstrap-modal.css" rel="stylesheet"/>
+<!-- search scripts -->
+<script>
+    var base_url = "..",
+    shortcuts = "{}";
+</script>
+<script defer="" src="../js/jquery/jquery-1.10.1.min.js"></script>
+<script defer="" src="../js/bootstrap/bootstrap.min.js"></script>
+<script defer="" src="../js/mkdocs/base.js"></script>
+<script src="../search/main.js"></script>
+</link></link></link></meta></meta></link><meta content="examples" name="title"/><meta content="website" property="og:type"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/examples" property="og:url"/><meta content="examples" property="og:title"/><meta content="this page provides a variety of examples for using the openai summarize diff action in different scenarios." property="og:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="og:image"/><meta content="summary_large_image" property="twitter:card"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/examples" property="twitter:url"/><meta content="examples" property="twitter:title"/><meta content="this page provides a variety of examples for using the openai summarize diff action in different scenarios." property="twitter:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="twitter:image"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "examples", "image": ["https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg"], "datePublished": "2025-03-23 22:15:55 -0700", "dateModified": "2025-03-23 22:15:55 -0700", "author": [{"@type": "Organization", "name": "Ultralytics", "url": "https://ultralytics.com/"}], "abstract": "this page provides a variety of examples for using the openai summarize diff action in different scenarios."}</script></head>
+<body class="terminal"><div class="container">
+<div class="terminal-nav">
+<header class="terminal-logo">
+<div class="logo terminal-prompt" id="mkdocs-terminal-site-name"><a class="no-style" href="https://captradeoff.github.io/openai-summarize-diff-action/">openai summarize diff action</a></div>
+</header>
+<nav class="terminal-menu">
+<ul typeof="BreadcrumbList" vocab="https://schema.org/">
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href=".." property="item" typeof="WebPage">
+<span property="name">home</span>
+</a>
+<meta content="0" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../feed_rss_updated.xml" property="item" typeof="WebPage">
+<span property="name">rss</span>
+</a>
+<meta content="1" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../llms.txt" property="item" typeof="WebPage">
+<span property="name">llms</span>
+</a>
+<meta content="2" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" data-target="#mkdocs_search_modal" data-toggle="modal" href="#" property="item" typeof="SearchAction">
+<i aria-hidden="true" class="fa fa-search"></i> <span property="name">Search</span>
+</a>
+<meta content="3" property="position"/>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="container">
+<div class="terminal-mkdocs-main-grid"><aside id="terminal-mkdocs-side-panel"><nav>
+<ul class="terminal-mkdocs-side-nav-items">
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="..">home</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item--active terminal-mkdocs-side-nav-section-no-index">get started</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../getting-started/">getting started</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../configuration/">configuration</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<span class="terminal-mkdocs-side-nav-item--active">examples</span>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item terminal-mkdocs-side-nav-section-no-index">developer docs</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../development/">overview</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../development/architecture/">architecture</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../development/troubleshooting/">troubleshooting</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../contributing/">contributing</a>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../feed_rss_updated.xml">rss</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../llms.txt">llms</a>
+</li>
+</ul>
+</nav><hr/>
+<nav>
+<ul>
+<li><a href="#usage-examples">usage examples</a></li>
+<li><a href="#basic-examples">basic examples</a></li><li><a href="#github-integration-examples">github integration examples</a></li><li><a href="#advanced-examples">advanced examples</a></li><li><a href="#additional-resources">additional resources</a></li>
+</ul>
+</nav>
+</aside>
+<main id="terminal-mkdocs-main-content">
+<section id="mkdocs-terminal-content">
+<h1 id="usage-examples">usage examples<a class="headerlink" href="#usage-examples" title="Anchor link to this section for reference">⁂</a></h1>
+<p>this page provides a variety of examples for using the openai summarize diff action in different scenarios.</p>
+<h2 id="basic-examples">basic examples<a class="headerlink" href="#basic-examples" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="summarize-pr-changes">summarize pr changes<a class="headerlink" href="#summarize-pr-changes" title="Anchor link to this section for reference">⁂</a></h3>
+<p>the most basic usage is to summarize changes in a pull request and display the result in the workflow logs:</p>
+<pre><code class="language-yaml">name: Summarize PR Changes
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF&lt;&lt;EOF" &gt;&gt; $GITHUB_ENV
+          echo "$DIFF" &gt;&gt; $GITHUB_ENV
+          echo "EOF" &gt;&gt; $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Output explanation
+        run: echo "${{ steps.explain.outputs.explanation }}"
+</code></pre>
+<h2 id="github-integration-examples">github integration examples<a class="headerlink" href="#github-integration-examples" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="add-summary-as-pr-comment">add summary as pr comment<a class="headerlink" href="#add-summary-as-pr-comment" title="Anchor link to this section for reference">⁂</a></h3>
+<p>automatically add the generated summary as a comment on the pr:</p>
+<pre><code class="language-yaml">name: Summarize PR Changes and Comment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF&lt;&lt;EOF" &gt;&gt; $GITHUB_ENV
+          echo "$DIFF" &gt;&gt; $GITHUB_ENV
+          echo "EOF" &gt;&gt; $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Post comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const explanation = process.env.EXPLANATION;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 AI Summary of Changes\n\n${explanation}`
+            });
+        env:
+          EXPLANATION: ${{ steps.explain.outputs.explanation }}
+</code></pre>
+<h3 id="update-pr-description">update pr description<a class="headerlink" href="#update-pr-description" title="Anchor link to this section for reference">⁂</a></h3>
+<p>add the summary to the pr description instead of as a comment:</p>
+<pre><code class="language-yaml">name: Update PR Description with Summary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  update-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          echo "DIFF&lt;&lt;EOF" &gt;&gt; $GITHUB_ENV
+          echo "$DIFF" &gt;&gt; $GITHUB_ENV
+          echo "EOF" &gt;&gt; $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Get PR Description
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            return pr.data.body || '';
+          result-encoding: string
+
+      - name: Update PR Description
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const explanation = process.env.EXPLANATION;
+            const currentBody = process.env.CURRENT_BODY;
+
+            // Remove old summary if it exists
+            let newBody = currentBody.replace(/## 🤖 AI Summary of Changes[\s\S]*?(?=##|$)/, '');
+
+            // Add new summary
+            newBody = `${newBody}\n\n## 🤖 AI Summary of Changes\n\n${explanation}\n\n`;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newBody
+            });
+        env:
+          EXPLANATION: ${{ steps.explain.outputs.explanation }}
+          CURRENT_BODY: ${{ steps.pr.outputs.result }}
+</code></pre>
+<h2 id="advanced-examples">advanced examples<a class="headerlink" href="#advanced-examples" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="generate-release-notes">generate release notes<a class="headerlink" href="#generate-release-notes" title="Anchor link to this section for reference">⁂</a></h3>
+<p>automatically create release notes when a tag is pushed:</p>
+<pre><code class="language-yaml">name: Generate Release Notes
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: previoustag
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2&gt;/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "PREV_TAG=$PREV_TAG" &gt;&gt; $GITHUB_ENV
+
+      - name: Get diff
+        id: diff
+        run: |
+          DIFF=$(git diff $PREV_TAG..HEAD)
+          echo "DIFF&lt;&lt;EOF" &gt;&gt; $GITHUB_ENV
+          echo "$DIFF" &gt;&gt; $GITHUB_ENV
+          echo "EOF" &gt;&gt; $GITHUB_ENV
+
+      - name: Generate release notes
+        id: notes
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+          examplePostSummary: "Release includes: improved performance, new UI components, and better error handling"
+          maxTokens: 100
+          maxCharacters: 500
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            # AI-Generated Release Notes
+
+            ${{ steps.notes.outputs.explanation }}
+
+            ---
+
+            *Generated automatically by OpenAI Summarize Diff Action*
+          draft: false
+          prerelease: false
+</code></pre>
+<h3 id="custom-diff-format-and-filtering">custom diff format and filtering<a class="headerlink" href="#custom-diff-format-and-filtering" title="Anchor link to this section for reference">⁂</a></h3>
+<p>filter the diff to exclude certain files before summarizing:</p>
+<pre><code class="language-yaml">name: Summarize PR with Filtering
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  explain-filtered-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get filtered diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          # Exclude package-lock.json, node_modules, and build outputs
+          DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD -- . ':(exclude)package-lock.json' ':(exclude)node_modules/**' ':(exclude)dist/**')
+          echo "DIFF&lt;&lt;EOF" &gt;&gt; $GITHUB_ENV
+          echo "$DIFF" &gt;&gt; $GITHUB_ENV
+          echo "EOF" &gt;&gt; $GITHUB_ENV
+
+      - name: Explain Diff
+        id: explain
+        uses: captradeoff/openai-summarize-diff-action@main
+        with:
+          diff: ${{ env.DIFF }}
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Output explanation
+        run: echo "${{ steps.explain.outputs.explanation }}"
+</code></pre>
+<h2 id="additional-resources">additional resources<a class="headerlink" href="#additional-resources" title="Anchor link to this section for reference">⁂</a></h2>
+<ul>
+<li><a href="../configuration/">configuration options</a> - learn about all available configuration options</li>
+<li><a href="api-reference.md">api reference</a> - detailed information about inputs and outputs</li>
+<li><a href="../development/">development guide</a> - contribute to this project </li>
+</ul>
+</section>
+<section id="mkdocs-terminal-after-content">
+</section>
+</main>
+</div>
+<hr/>
+<div style="width: 100%; text-align: center; margin: 15px auto;">
+<a class="hover-item" href="#" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), 'TwitterShare', 'width=550,height=680,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on X
+    </a>
+<a class="hover-item" href="#" onclick="window.open('https://www.linkedin.com/shareArticle?url=' + encodeURIComponent(window.location.href), 'LinkedinShare', 'width=550,height=730,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on LinkedIn
+    </a>
+</div>
+<p style="text-align: center;">None <a href="/license/">license</a></p>
+<table class="table table-striped table-hover">
+<tbody>
+<tr>
+<td style="text-align: center">
+<a href="https://x.com/i/communities/1903531139035476424">join x community</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/issues">open an issue</a>
+</td>
+<td style="text-align: center">
+<a href="https://x.com/captradeoff">follow on x</a>
+</td>
+</tr>
+<tr>
+<td style="text-align: center">
+<a href="https://discord.gg/abnrNxa7J5">join discord server</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/fork">fork this repo</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff">follow on github</a>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;"><a href="https://github.com/captradeoff/d-sys-wiki-documentation-template">d-sys.wiki documentation template</a></p>
+</div>
+<div aria-labelledby="searchModalLabel" aria-modal="true" class="modal" id="mkdocs_search_modal" role="alertdialog" tabindex="-1">
+<div class="modal-dialog modal-lg" role="search">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="searchModalLabel">Search</h5>
+<button class="close btn btn-default btn-ghost" data-dismiss="modal" type="button"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
+<p id="searchInputLabel">Type to start searching</p>
+<form>
+<div class="form-group">
+<input aria-labelledby="searchInputLabel" class="form-control" id="mkdocs-search-query" placeholder="" title="Please enter search terms here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No document matches found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

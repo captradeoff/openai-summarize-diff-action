@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+<meta content="mkdocs-1.6.1, mkdocs-terminal-4.7.0" name="generator"/>
+<meta content="This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action." name="description"/>
+<meta content="captradeoff" name="author"/>
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/development/troubleshooting/" rel="canonical"/><link href="../../img/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png">
+<link href="../../img/android-chrome-512x512.png" rel="icon" sizes="512x512" type="image/png"/>
+<link href="../../img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="../../img/favicon.ico" rel="shortcut icon" sizes="48x48" type="image/png"/>
+<link href="../../img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="../../img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+<title>troubleshooting - openai summarize diff action</title>
+<link href="../../css/fontawesome/css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../css/fontawesome/css/solid.min.css" rel="stylesheet"/>
+<link href="../../css/normalize.css" rel="stylesheet"/>
+<link href="../../css/terminal.css" rel="stylesheet"/>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme.tile_grid.css" rel="stylesheet"/>
+<link href="../../css/theme.footer.css" rel="stylesheet"/>
+<!-- gruvbox_dark color palette -->
+<link href="../../css/palettes/gruvbox_dark.css" rel="stylesheet"/>
+<!-- page layout -->
+<style>
+/* initially set page layout to a one column grid */
+.terminal-mkdocs-main-grid {
+    display: grid;
+    grid-column-gap: 1.4em;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+}
+
+/*  
+*   when side navigation is not hidden, use a two column grid.  
+*   if the screen is too narrow, fall back to the initial one column grid layout.
+*   in this case the main content will be placed under the navigation panel. 
+*/
+@media only screen and (min-width: 70em) {
+    .terminal-mkdocs-main-grid {
+        grid-template-columns: 4fr 9fr;
+    }
+}</style>
+<!-- cursor_animation override -->
+<style>
+  #mkdocs-terminal-site-name.terminal-prompt::after {
+      display: none;
+  }
+</style>
+<link href="../../style.css" rel="stylesheet"/>
+<meta content="@dsyswiki" name="twitter:site">
+<meta content="@captradeoff" name="twitter:creator">
+<!-- RSS Feed -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_created.xml" rel="alternate" title="RSS feed of created content" type="application/rss+xml">
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml">
+<!-- llms.txt -->
+<link href="https://captradeoff.github.io/openai-summarize-diff-action/llms.txt" rel="alternate" title="llms.txt" type="text/plain">
+<!-- search css support -->
+<link href="../../css/search/bootstrap-modal.css" rel="stylesheet"/>
+<!-- search scripts -->
+<script>
+    var base_url = "../..",
+    shortcuts = "{}";
+</script>
+<script defer="" src="../../js/jquery/jquery-1.10.1.min.js"></script>
+<script defer="" src="../../js/bootstrap/bootstrap.min.js"></script>
+<script defer="" src="../../js/mkdocs/base.js"></script>
+<script src="../../search/main.js"></script>
+</link></link></link></meta></meta></link><meta content="troubleshooting" name="title"/><meta content="website" property="og:type"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/development/troubleshooting" property="og:url"/><meta content="troubleshooting" property="og:title"/><meta content="This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action." property="og:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="og:image"/><meta content="summary_large_image" property="twitter:card"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/development/troubleshooting" property="twitter:url"/><meta content="troubleshooting" property="twitter:title"/><meta content="This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action." property="twitter:description"/><meta content="https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg" property="twitter:image"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "troubleshooting", "image": ["https://captradeoff.github.io/openai-summarize-diff-action/img/captradeoff.jpg"], "datePublished": "2025-03-23 22:15:55 -0700", "dateModified": "2025-03-23 22:15:55 -0700", "author": [{"@type": "Organization", "name": "Ultralytics", "url": "https://ultralytics.com/"}], "abstract": "This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action."}</script></head>
+<body class="terminal"><div class="container">
+<div class="terminal-nav">
+<header class="terminal-logo">
+<div class="logo terminal-prompt" id="mkdocs-terminal-site-name"><a class="no-style" href="https://captradeoff.github.io/openai-summarize-diff-action/">openai summarize diff action</a></div>
+</header>
+<nav class="terminal-menu">
+<ul typeof="BreadcrumbList" vocab="https://schema.org/">
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../.." property="item" typeof="WebPage">
+<span property="name">home</span>
+</a>
+<meta content="0" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../../feed_rss_updated.xml" property="item" typeof="WebPage">
+<span property="name">rss</span>
+</a>
+<meta content="1" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" href="../../llms.txt" property="item" typeof="WebPage">
+<span property="name">llms</span>
+</a>
+<meta content="2" property="position"/>
+</li>
+<li property="itemListElement" typeof="ListItem">
+<a class="menu-item" data-target="#mkdocs_search_modal" data-toggle="modal" href="#" property="item" typeof="SearchAction">
+<i aria-hidden="true" class="fa fa-search"></i> <span property="name">Search</span>
+</a>
+<meta content="3" property="position"/>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="container">
+<div class="terminal-mkdocs-main-grid"><aside id="terminal-mkdocs-side-panel"><nav>
+<ul class="terminal-mkdocs-side-nav-items">
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../..">home</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item terminal-mkdocs-side-nav-section-no-index">get started</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../getting-started/">getting started</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../configuration/">configuration</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../examples/">examples</a>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<span class="terminal-mkdocs-side-nav-item--active terminal-mkdocs-side-nav-section-no-index">developer docs</span>
+<ul class="terminal-mkdocs-side-nav-li-ul">
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../">overview</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../architecture/">architecture</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<span class="terminal-mkdocs-side-nav-item--active">troubleshooting</span>
+</li>
+<li class="terminal-mkdocs-side-nav-li-ul-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../contributing/">contributing</a>
+</li>
+</ul>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../feed_rss_updated.xml">rss</a>
+</li>
+<li class="terminal-mkdocs-side-nav-li">
+<a class="terminal-mkdocs-side-nav-item" href="../../llms.txt">llms</a>
+</li>
+</ul>
+</nav><hr/>
+<nav>
+<ul>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#github-action-issues">GitHub Action Issues</a></li><li><a href="#openai-api-issues">OpenAI API Issues</a></li><li><a href="#development-environment-issues">Development Environment Issues</a></li><li><a href="#build-and-deployment-issues">Build and Deployment Issues</a></li><li><a href="#common-errors-and-solutions">Common Errors and Solutions</a></li><li><a href="#getting-additional-help">Getting Additional Help</a></li>
+</ul>
+</nav>
+</aside>
+<main id="terminal-mkdocs-main-content">
+<section id="mkdocs-terminal-content">
+<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Anchor link to this section for reference">⁂</a></h1>
+<p>This guide provides solutions for common issues you might encounter when using or developing with the OpenAI Summarize Diff Action.</p>
+<h2 id="github-action-issues">GitHub Action Issues<a class="headerlink" href="#github-action-issues" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="action-fails-with-openai-api-key-is-required">Action Fails with "OpenAI API key is required"<a class="headerlink" href="#action-fails-with-openai-api-key-is-required" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action fails with the error message "OpenAI API key is required."</p>
+<p><strong>Possible causes</strong>:
+1. The API key secret is not set in your repository
+2. The secret name in your workflow doesn't match the secret name in your repository
+3. The <code>apikey</code> input parameter is not properly referenced in your workflow file</p>
+<p><strong>Solution</strong>:
+1. Check that you've added the OpenAI API key as a secret in your repository:
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Verify that your OpenAI API key is added as a secret (e.g., <code>OPENAI_API_KEY</code>)</p>
+<ol>
+<li>Ensure your workflow file correctly references the secret:
+   ```yaml</li>
+<li>name: Explain Diff
+     id: explain
+     uses: captradeoff/openai-summarize-diff-action@main
+     with:
+       diff: ${{ env.DIFF }}
+       apikey: ${{ secrets.OPENAI_API_KEY }}  # Make sure this matches your secret name
+   ```</li>
+</ol>
+<h3 id="action-fails-with-diff-is-required">Action Fails with "Diff is required"<a class="headerlink" href="#action-fails-with-diff-is-required" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action fails with the error message "Diff is required."</p>
+<p><strong>Possible causes</strong>:
+1. The diff generation in your workflow is failing
+2. The diff is empty (no changes between the compared branches/commits)
+3. The environment variable setting is incorrect</p>
+<p><strong>Solution</strong>:
+1. Debug your diff generation step by adding an output step:
+   ```yaml
+   - name: Get PR diff
+     id: diff
+     run: |
+       git fetch origin ${{ github.event.pull_request.base.ref }}
+       DIFF=$(git diff origin/${{ github.event.pull_request.base.ref }}..HEAD)
+       echo "DIFF&lt;<eof">&gt; $GITHUB_ENV
+       echo "$DIFF" &gt;&gt; $GITHUB_ENV
+       echo "EOF" &gt;&gt; $GITHUB_ENV</eof"></p>
+<ul>
+<li>
+<p>name: Debug diff
+     run: echo "${{ env.DIFF }}"
+   ```</p>
+</li>
+<li>
+<p>If the diff is empty, check that:</p>
+</li>
+<li>There are actual changes between the branches</li>
+<li>Your Git fetch depth is sufficient (<code>fetch-depth: 0</code> is recommended)</li>
+</ul>
+<h3 id="action-fails-with-maxtokens-must-be-a-valid-number">Action Fails with "maxTokens must be a valid number"<a class="headerlink" href="#action-fails-with-maxtokens-must-be-a-valid-number" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action fails with the error message "maxTokens must be a valid number."</p>
+<p><strong>Possible causes</strong>:
+1. The <code>maxTokens</code> parameter is provided but contains a non-numeric value
+2. There's a syntax error in how the parameter is defined</p>
+<p><strong>Solution</strong>:
+1. Ensure the <code>maxTokens</code> parameter is a number:
+   <code>yaml
+   maxTokens: 50  # Correct</code></p>
+<p>Not:
+   <code>yaml
+   maxTokens: "fifty"  # Incorrect</code></p>
+<ol>
+<li>If you're setting it dynamically, ensure it's properly converted to a number.</li>
+</ol>
+<h2 id="openai-api-issues">OpenAI API Issues<a class="headerlink" href="#openai-api-issues" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="action-fails-with-failed-to-generate-explanation-429-too-many-requests">Action Fails with "Failed to generate explanation: 429 Too Many Requests"<a class="headerlink" href="#action-fails-with-failed-to-generate-explanation-429-too-many-requests" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action fails with a rate limit error from the OpenAI API.</p>
+<p><strong>Possible causes</strong>:
+1. You've exceeded your OpenAI API rate limits
+2. Your account has billing issues</p>
+<p><strong>Solution</strong>:
+1. Implement retry logic in your workflow for transient rate limit issues
+2. Check your OpenAI account for any billing or rate limit issues
+3. Consider adding a delay between action runs if you're running many in parallel</p>
+<h3 id="action-returns-empty-or-incomplete-explanation">Action Returns Empty or Incomplete Explanation<a class="headerlink" href="#action-returns-empty-or-incomplete-explanation" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action runs successfully but returns an empty or truncated explanation.</p>
+<p><strong>Possible causes</strong>:
+1. The <code>maxTokens</code> parameter is set too low
+2. The diff is very complex or large
+3. The API response was cut off</p>
+<p><strong>Solution</strong>:
+1. Increase the <code>maxTokens</code> parameter:
+   <code>yaml
+   maxTokens: 100  # Try a higher value</code></p>
+<ol>
+<li>
+<p>Increase the <code>maxCharacters</code> parameter:
+   <code>yaml
+   maxCharacters: 500  # Allow for longer explanations</code></p>
+</li>
+<li>
+<p>For large diffs, consider filtering to focus on meaningful changes.</p>
+</li>
+</ol>
+<h2 id="development-environment-issues">Development Environment Issues<a class="headerlink" href="#development-environment-issues" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="tests-failing-with-cannot-find-module-openai">Tests Failing with "Cannot find module 'openai'"<a class="headerlink" href="#tests-failing-with-cannot-find-module-openai" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: Tests fail with module not found errors.</p>
+<p><strong>Possible causes</strong>:
+1. Dependencies are not installed
+2. The package has been updated and requires a reinstall</p>
+<p><strong>Solution</strong>:
+1. Reinstall dependencies:
+   <code>bash
+   npm ci  # Clean install from package-lock.json</code></p>
+<ol>
+<li>If the issue persists, try deleting node_modules and reinstalling:
+   <code>bash
+   rm -rf node_modules
+   npm install</code></li>
+</ol>
+<h3 id="openai-tests-failing-without-api-key">OpenAI Tests Failing Without API Key<a class="headerlink" href="#openai-tests-failing-without-api-key" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: OpenAI integration tests fail when no API key is available.</p>
+<p><strong>Possible causes</strong>:
+1. You're running tests that require a real OpenAI API key
+2. Mocks are not properly set up</p>
+<p><strong>Solution</strong>:
+1. For local development, create a <code>.env</code> file with your API key:
+   <code>OPENAI_API_KEY=your_api_key_here</code></p>
+<ol>
+<li>For CI environments, use mocks instead of real API calls:
+   <code>javascript
+   // Example of mocking the OpenAI API in tests
+   jest.mock('openai', () =&gt; {
+     return {
+       OpenAI: jest.fn().mockImplementation(() =&gt; {
+         return {
+           chat: {
+             completions: {
+               create: jest.fn().mockResolvedValue({
+                 choices: [{ message: { content: 'Mocked explanation' } }]
+               })
+             }
+           }
+         };
+       })
+     };
+   });</code></li>
+</ol>
+<h2 id="build-and-deployment-issues">Build and Deployment Issues<a class="headerlink" href="#build-and-deployment-issues" title="Anchor link to this section for reference">⁂</a></h2>
+<h3 id="action-build-fails">Action Build Fails<a class="headerlink" href="#action-build-fails" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: Build process fails with errors.</p>
+<p><strong>Possible causes</strong>:
+1. Linting errors
+2. Test failures
+3. Compilation errors</p>
+<p><strong>Solution</strong>:
+1. Run each step individually to isolate the issue:
+   <code>bash
+   npm run lint
+   npm test
+   npm run build</code></p>
+<ol>
+<li>Fix any issues found in the specific step that fails.</li>
+</ol>
+<h3 id="action-works-locally-but-fails-in-github">Action Works Locally but Fails in GitHub<a class="headerlink" href="#action-works-locally-but-fails-in-github" title="Anchor link to this section for reference">⁂</a></h3>
+<p><strong>Problem</strong>: The action works in your local testing but fails when deployed to GitHub.</p>
+<p><strong>Possible causes</strong>:
+1. Environment differences
+2. Secret configuration issues
+3. Permissions problems</p>
+<p><strong>Solution</strong>:
+1. Enable debug logs in GitHub Actions:
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Add a new repository secret named <code>ACTIONS_STEP_DEBUG</code> with the value <code>true</code></p>
+<ol>
+<li>
+<p>Check action runs with debug enabled to see detailed logs.</p>
+</li>
+<li>
+<p>Ensure all required permissions are specified in your workflow:
+   <code>yaml
+   jobs:
+     explain-diff:
+       runs-on: ubuntu-latest
+       permissions:
+         pull-requests: write  # If needed for commenting</code></p>
+</li>
+</ol>
+<h2 id="common-errors-and-solutions">Common Errors and Solutions<a class="headerlink" href="#common-errors-and-solutions" title="Anchor link to this section for reference">⁂</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error Message</th>
+<th>Likely Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"OpenAI API key is required"</td>
+<td>Missing or incorrect API key</td>
+<td>Check API key configuration</td>
+</tr>
+<tr>
+<td>"Diff is required"</td>
+<td>Empty or missing diff</td>
+<td>Debug diff generation step</td>
+</tr>
+<tr>
+<td>"maxTokens must be a valid number"</td>
+<td>Invalid parameter value</td>
+<td>Ensure parameters are numeric</td>
+</tr>
+<tr>
+<td>"429 Too Many Requests"</td>
+<td>API rate limiting</td>
+<td>Check OpenAI usage and billing</td>
+</tr>
+<tr>
+<td>"Failed to generate explanation"</td>
+<td>Generic API error</td>
+<td>Check API key, request format, and logs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="getting-additional-help">Getting Additional Help<a class="headerlink" href="#getting-additional-help" title="Anchor link to this section for reference">⁂</a></h2>
+<p>If you're encountering issues not covered in this guide:</p>
+<ol>
+<li>Check the <a href="https://github.com/captradeoff/openai-summarize-diff-action/issues">GitHub Issues</a> to see if others have reported similar problems</li>
+<li>Review the <a href="../api-reference.md">API Reference</a> for correct parameter usage</li>
+<li>Consult the <a href="https://platform.openai.com/docs/api-reference">OpenAI API Documentation</a> for API-specific issues</li>
+<li>Open a new issue with detailed information about the problem, including:</li>
+<li>Your workflow file (with secrets redacted)</li>
+<li>Error messages</li>
+<li>Environment details </li>
+</ol>
+</section>
+<section id="mkdocs-terminal-after-content">
+</section>
+</main>
+</div>
+<hr/>
+<div style="width: 100%; text-align: center; margin: 15px auto;">
+<a class="hover-item" href="#" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), 'TwitterShare', 'width=550,height=680,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on X
+    </a>
+<a class="hover-item" href="#" onclick="window.open('https://www.linkedin.com/shareArticle?url=' + encodeURIComponent(window.location.href), 'LinkedinShare', 'width=550,height=730,menubar=no,toolbar=no'); return false;" style="color: white; margin: 0 15px; display: inline-block;">
+        Share on LinkedIn
+    </a>
+</div>
+<p style="text-align: center;">None <a href="/license/">license</a></p>
+<table class="table table-striped table-hover">
+<tbody>
+<tr>
+<td style="text-align: center">
+<a href="https://x.com/i/communities/1903531139035476424">join x community</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/issues">open an issue</a>
+</td>
+<td style="text-align: center">
+<a href="https://x.com/captradeoff">follow on x</a>
+</td>
+</tr>
+<tr>
+<td style="text-align: center">
+<a href="https://discord.gg/abnrNxa7J5">join discord server</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff/d-sys-wiki/fork">fork this repo</a>
+</td>
+<td style="text-align: center">
+<a href="https://github.com/captradeoff">follow on github</a>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;"><a href="https://github.com/captradeoff/d-sys-wiki-documentation-template">d-sys.wiki documentation template</a></p>
+</div>
+<div aria-labelledby="searchModalLabel" aria-modal="true" class="modal" id="mkdocs_search_modal" role="alertdialog" tabindex="-1">
+<div class="modal-dialog modal-lg" role="search">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="searchModalLabel">Search</h5>
+<button class="close btn btn-default btn-ghost" data-dismiss="modal" type="button"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
+<p id="searchInputLabel">Type to start searching</p>
+<form>
+<div class="form-group">
+<input aria-labelledby="searchInputLabel" class="form-control" id="mkdocs-search-query" placeholder="" title="Please enter search terms here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No document matches found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
